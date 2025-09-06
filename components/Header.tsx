@@ -1,13 +1,17 @@
 import React from 'react';
-import { RefreshCwIcon, SunIcon, MoonIcon } from './icons';
+import { RefreshCwIcon, SunIcon, MoonIcon, SettingsIcon } from './icons';
+import UserProfile from './UserProfile';
+import { AuthUser } from '../services/authService';
 
 interface HeaderProps {
   onRefresh: () => void;
   theme: 'light' | 'dark';
   onToggleTheme: () => void;
+  onOpenSettings: () => void;
+  user: AuthUser | null;
 }
 
-const Header: React.FC<HeaderProps> = ({ onRefresh, theme, onToggleTheme }) => {
+const Header: React.FC<HeaderProps> = ({ onRefresh, theme, onToggleTheme, onOpenSettings, user }) => {
   return (
     <header className="bg-white dark:bg-slate-800 shadow-md sticky top-0 z-10">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -35,6 +39,14 @@ const Header: React.FC<HeaderProps> = ({ onRefresh, theme, onToggleTheme }) => {
             >
               <RefreshCwIcon className="h-5 w-5" />
             </button>
+            <button
+              onClick={onOpenSettings}
+              className="flex items-center justify-center p-2 rounded-full text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+              aria-label="Open settings"
+            >
+              <SettingsIcon className="h-5 w-5" />
+            </button>
+            {user && <UserProfile />}
           </div>
         </div>
       </div>

@@ -4,10 +4,14 @@ import {
     BarChart, Bar, XAxis, YAxis, CartesianGrid 
 } from 'recharts';
 import { DashboardStatsData, Sentiment, Priority } from '../types';
+
+interface EnhancedDashboardStatsData extends DashboardStatsData {
+  emailsByHour: Array<{ hour: number; count: number }>;
+}
 import { BarChartIcon, CheckCircleIcon, ClockIcon, CalendarIcon } from './icons';
 
 interface DashboardStatsProps {
-  stats: DashboardStatsData;
+  stats: EnhancedDashboardStatsData;
 }
 
 const StatCard: React.FC<{ title: string; value: number; icon: React.ReactNode }> = ({ title, value, icon }) => (
@@ -112,6 +116,35 @@ const DashboardStats: React.FC<DashboardStatsProps> = ({ stats }) => {
           </ResponsiveContainer>
         </div>
       </div>
+
+      {stats.emailsByHour && stats.emailsByHour.length > 0 && (
+        <div className="bg-white dark:bg-slate-800 p-4 rounded-lg shadow">
+          <h3 className="text-md font-semibold mb-2 text-center">Emails Received (Last 24 Hours)</h3>
+          <div style={{ width: '100%', height: 200 }}>
+            <ResponsiveContainer>
+              <BarChart data={stats.emailsByHour} margin={{ top: 5, right: 20, left: -10, bottom: 5 }}>
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(100, 116, 139, 0.3)" />
+                <XAxis 
+                  dataKey="hour" 
+                  tick={{ fill: '#64748b' }} 
+                  fontSize={12}
+                  tickFormatter={(hour) => `${hour}:00`}
+                />
+                <YAxis allowDecimals={false} tick={{ fill: '#64748b' }} />
+                <Tooltip 
+                  contentStyle={{ 
+                    backgroundColor: 'rgba(30, 41, 59, 0.9)', 
+                    borderColor: '#475569',
+                    borderRadius: '0.5rem'
+                  }}
+                  labelFormatter={(hour) => `Hour: ${hour}:00`}
+                />
+                <Bar dataKey="count" name="Emails" fill="#3B82F6" />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
